@@ -1,5 +1,6 @@
-class Paragraph
+class Paragraph < String
   def initialize string
+    super string
     @paragraph = string
   end
 
