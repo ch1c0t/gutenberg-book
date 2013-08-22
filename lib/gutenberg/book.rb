@@ -10,7 +10,8 @@ module Gutenberg
       file = Pathname.new(path).expand_path
       @parts = IO.read(file)
         .split(/\r\n\r\n/)
-        .delete_if &:empty?
+        .delete_if(&:empty?)
+        .map { |part| part.gsub "\r\n", ' ' }
 
       @book_start = @parts.find_index { |s| s.start_with? '*** START' }
       @book_end   = @parts.find_index { |s| s.start_with? '*** END' }
