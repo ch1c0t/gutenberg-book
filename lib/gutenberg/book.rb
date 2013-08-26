@@ -13,8 +13,8 @@ module Gutenberg
         .delete_if(&:empty?)
         .map { |part| part.gsub "\r\n", ' ' }
 
-      @book_start = @parts.find_index { |s| s.start_with? '*** START' }
-      @book_end   = @parts.find_index { |s| s.start_with? '*** END' }
+      @book_start = @parts.find_index { |s| s.start_with? '*** START', "\n*** START" }
+      @book_end   = @parts.find_index { |s| s.start_with? '*** END', "\n*** END" }
     end
 
     def metainfo
