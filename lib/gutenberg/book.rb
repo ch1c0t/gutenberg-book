@@ -41,5 +41,9 @@ module Gutenberg
       @paragraphs || get_paragraphs[]
     end
     alias_method :units, :paragraphs
+
+    def title
+      metainfo['Title']
+    end
   end
 end
