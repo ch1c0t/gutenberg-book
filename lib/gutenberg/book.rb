@@ -40,5 +40,6 @@ module Gutenberg
 
       @paragraphs || get_paragraphs[]
     end
+    alias_method :units, :paragraphs
   end
 end
