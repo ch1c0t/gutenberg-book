@@ -7,15 +7,30 @@ module Gutenberg
   class Book
     include Enumerable
 
-    def initialize path
-      file = Pathname.new(path).expand_path
-      @parts = IO.read(file)
-        .split(/\r\n\r\n/)
-        .delete_if(&:empty?)
-        .map { |part| part.strip.gsub "\r\n", ' ' }
+    def each &b
+      paragraphs.each &b
+    end
 
-      @book_start = @parts.find_index { |s| s.start_with? '*** START' }
-      @book_end   = @parts.find_index { |s| s.start_with? '*** END' }
+    def initialize parts
+      @book_start = parts.find_index { |s| s.start_with? '*** START' }
+      @book_end   = parts.find_index { |s| s.start_with? '*** END' }
+      @parts = parts
+    end
+
+    class << self
+      def new_from_txt path
+        file = Pathname.new(path).expand_path
+        parts = IO.read(file)
+          .split(/\r\n\r\n/)
+          .delete_if(&:empty?)
+          .map { |part| part.strip.gsub "\r\n", ' ' }
+
+        new parts
+      end
+
+      def new_from_daybreak path
+        new (Daybreak::DB.new path)
+      end
     end
 
     def metainfo
@@ -37,8 +52,10 @@ module Gutenberg
       @paragraphs ||= get_paragraphs[]
     end
 
-    def each &b
-      paragraphs.each &b
+    def save_to file
+      db = Daybreak::DB.new file
+      @parts.each { |k, v| db[k] = v }
+      db.flush; db.close
     end
   end
 end
