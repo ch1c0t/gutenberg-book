@@ -1,7 +1,6 @@
 require 'pathname'
 
 require "gutenberg/book/version"
-require "gutenberg/book/paragraph"
 
 module Gutenberg
   class Book
