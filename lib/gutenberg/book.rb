@@ -1,5 +1,4 @@
 require 'pathname'
-require 'scalpel'
 
 require "gutenberg/book/version"
 require "gutenberg/book/paragraph"
@@ -39,11 +38,6 @@ module Gutenberg
       end
 
       @paragraphs || get_paragraphs[]
-    end
-    alias_method :units, :paragraphs
-
-    def title
-      metainfo['Title']
     end
   end
 end
