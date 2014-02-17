@@ -52,6 +52,10 @@ module Gutenberg
       @paragraphs ||= get_paragraphs[]
     end
 
+    def [] id
+      paragraphs[id]
+    end
+
     def save_to file
       db = Daybreak::DB.new file
       @parts.each { |k, v| db[k] = v }
