@@ -5,6 +5,8 @@ require "gutenberg/book/paragraph"
 
 module Gutenberg
   class Book
+    include Enumerable
+
     def initialize path
       file = Pathname.new(path).expand_path
       @parts = IO.read(file)
@@ -18,26 +20,25 @@ module Gutenberg
 
     def metainfo
       get_metainfo = -> do 
-        @metainfo = {}
+        metainfo = {}
         @parts[0..@book_start].each do |string|
           key, value = string.split ': ', 2
-          @metainfo[key] = value unless key.nil? || value.nil?
+          metainfo[key] = value unless key.nil? || value.nil?
         end
 
-        @metainfo
+        metainfo
       end
 
-      @metainfo || get_metainfo[]
+      @metainfo ||= get_metainfo[]
     end
 
     def paragraphs
-      get_paragraphs = -> do
-        @paragraphs = @parts[@book_start+1...@book_end].map do |string|
-          Paragraph.new string
-        end
-      end
+      get_paragraphs = -> { @parts[@book_start+1...@book_end] }
+      @paragraphs ||= get_paragraphs[]
+    end
 
-      @paragraphs || get_paragraphs[]
+    def each &b
+      paragraphs.each &b
     end
   end
 end

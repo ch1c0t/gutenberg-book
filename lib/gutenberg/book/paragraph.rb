@@ -1,1 +1,0 @@
-class Paragraph < String; end
