@@ -1,3 +1,4 @@
+require 'daybreak'
 require 'pathname'
 
 require "gutenberg/book/version"
@@ -27,8 +28,9 @@ module Gutenberg
         new parts
       end
 
-      def new_from_daybreak path
-        new (Daybreak::DB.new path)
+      def new_from_db db
+        parts = Daybreak::DB.new(db).map { |index, string| string }
+        new parts
       end
     end
 
@@ -57,7 +59,7 @@ module Gutenberg
 
     def save_to file
       db = Daybreak::DB.new file
-      @parts.each { |k, v| db[k] = v }
+      @parts.each_with_index { |string, index| db[index] = string }
       db.flush; db.close
     end
   end
